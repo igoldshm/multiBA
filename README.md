@@ -7,10 +7,18 @@
 
 <br/><br/>
 
+```
+███╗   ███╗██╗   ██╗██╗  ████████╗██╗██████╗  █████╗
+████╗ ████║██║   ██║██║  ╚══██╔══╝██║██╔══██╗██╔══██╗
+██╔████╔██║██║   ██║██║     ██║   ██║██████╔╝███████║
+██║╚██╔╝██║██║   ██║██║     ██║   ██║██╔══██╗██╔══██║
+██║ ╚═╝ ██║╚██████╔╝███████╗██║   ██║██████╔╝██║  ██║
+╚═╝     ╚═╝ ╚═════╝ ╚══════╝╚═╝   ╚═╝╚═════╝ ╚═╝  ╚═╝
+```
 
 # MultiBA — Multimodal Binding Affinity Predictor
 
-**A two-tower deep learning system that predicts protein-ligand binding affinity (pKd / pKi) from raw sequence and SMILES strings — combining Protein Language Models, Graph Neural Networks, and Cross-Attention Fusion.**
+**A two-tower deep learning system that predicts protein-ligand binding affinity (pKd / pKi) from raw sequence and SMILES strings, combining Protein Language Models, Graph Neural Networks, and Cross-Attention Fusion.**
 
 <br/>
 
@@ -30,7 +38,7 @@
 
 ## 🎯 Motivation
 
-Drug discovery costs **~$2.6 billion** and takes **10–15 years** per approved drug. A critical bottleneck is predicting which small molecules bind tightly to disease-relevant proteins — traditionally done with slow, expensive experimental assays (ITC, SPR).
+Drug discovery costs **~$2.6 billion** and takes **10–15 years** per approved drug. A critical bottleneck is predicting which small molecules bind tightly to disease-relevant proteins, traditionally done with slow, expensive experimental assays (ITC, SPR).
 
 This project builds a deep learning model for **high-throughput virtual screening**: given a protein sequence and a SMILES string, predict the binding affinity in milliseconds instead of days.
 
@@ -272,7 +280,7 @@ This directly models the biophysical reality: specific amino acids in the bindin
 
 At inference time, dropout is kept **ON** for T=30 forward passes. The standard deviation of predictions estimates **epistemic uncertainty** — how confident the model is given what it's seen in training.
 
-High uncertainty (std > 0.5 pKd units) signals: *"This compound is out-of-distribution — verify experimentally before investing."* This is critical for drug discovery workflows.
+High uncertainty (std > 0.5 pKd units) signals: *"This compound is out-of-distribution - verify experimentally before investing."* This is critical for drug discovery workflows.
 
 ---
 
@@ -321,11 +329,11 @@ Tracked automatically: loss curves, Pearson R, RMSE, learning rates, hyperparame
 
 ## 🗺️ Roadmap
 
-- [ ] **3D structure path** — AlphaFold2 predicted structures + SE(3)-equivariant GNN (EquiBind)
-- [ ] **ADMET multi-task** — joint prediction of solubility, toxicity, membrane permeability
-- [ ] **Active learning loop** — uncertainty-guided selection of compounds for wet-lab validation
-- [ ] **Generative inversion** — given a protein, generate novel ligands (diffusion over SMILES latents)
-- [ ] **Covalent docking** — extend to irreversible covalent inhibitors
+- [ ] **3D structure path** -> AlphaFold2 predicted structures + SE(3)-equivariant GNN (EquiBind)
+- [ ] **ADMET multi-task** -> joint prediction of solubility, toxicity, membrane permeability
+- [ ] **Active learning loop** -> uncertainty-guided selection of compounds for wet-lab validation
+- [ ] **Generative inversion** -> given a protein, generate novel ligands (diffusion over SMILES latents)
+- [ ] **Covalent docking** -> extend to irreversible covalent inhibitors
 
 ---
 
