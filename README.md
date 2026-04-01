@@ -94,10 +94,10 @@ This project builds a deep learning model for **high-throughput virtual screenin
 ```
 MultiBA/
 │
-├── 📓 notebooks/
+├── notebooks/
 │   └── 01_EDA_and_Baseline.ipynb        # Start here — data exploration + ECFP baseline
 │
-├── 🧬 src/
+├── src/
 │   ├── data/
 │   │   ├── dataset.py                   # PDBbind Dataset, graph building, caching
 │   │   └── splits.py                    # Refined-Core, Scaffold, Temporal splits
@@ -107,15 +107,15 @@ MultiBA/
 │       ├── fusion.py                    # Cross-Attention & Concat fusion
 │       └── binding_model.py             # Full MultiBA (PyTorch Lightning)
 │
-├── 📊 data/
+├── data/
 │   ├── download_pdbbind.py              # Dataset download (Kaggle / official / sample)
 │   └── preprocess.py                   # Cleaning, filtering, SMILES validation
 │
-├── ⚙️  configs/
+├──  configs/
 │   ├── base_config.yaml                 # All hyperparameters (Hydra-managed)
 │   └── ablation_config.yaml            # Ablation: concat fusion baseline
 │
-├── 🧪 tests/
+├── tests/
 │   └── test_model_components.py         # pytest suite: shapes, metrics, splits
 │
 ├── train.py                             # Training entrypoint (Hydra + Lightning)
@@ -361,7 +361,7 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-## 💬 Citation
+## Citation
 
 ```bibtex
 @software{multiba2025,
