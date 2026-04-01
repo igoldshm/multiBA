@@ -28,7 +28,7 @@
 
 ---
 
-## 🎯 Motivation
+## Motivation
 
 Drug discovery costs **~$2.6 billion** and takes **10–15 years** per approved drug. A critical bottleneck is predicting which small molecules bind tightly to disease-relevant proteins, traditionally done with slow, expensive experimental assays (ITC, SPR).
 
@@ -36,7 +36,7 @@ This project builds a deep learning model for **high-throughput virtual screenin
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
   Protein Sequence                        SMILES String
@@ -89,7 +89,7 @@ This project builds a deep learning model for **high-throughput virtual screenin
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 MultiBA/
@@ -127,7 +127,7 @@ MultiBA/
 
 ---
 
-## 🚀 Quickstart
+## Quickstart
 
 ### 1. Clone & Install
 
@@ -220,7 +220,7 @@ python app.py
 
 ---
 
-## 📊 Results
+## Results
 
 ### CASF-2016 Core Set Benchmark
 
@@ -244,7 +244,7 @@ python app.py
 
 ---
 
-## 🔬 Scientific Background
+## Scientific Background
 
 ### What is pKd?
 `pKd = -log₁₀(Kd)` where Kd is the dissociation constant. Higher = stronger binding.
@@ -276,7 +276,7 @@ High uncertainty (std > 0.5 pKd units) signals: *"This compound is out-of-distri
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 All hyperparameters live in `configs/base_config.yaml` and are managed by [Hydra](https://hydra.cc). Override anything from the CLI without touching config files:
 
@@ -293,7 +293,7 @@ python train.py --config-name ablation_config
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
@@ -307,7 +307,7 @@ Tests cover: attention output shapes, MC Dropout uncertainty statistics, Pearson
 
 ---
 
-## 📈 Experiment Tracking
+## Experiment Tracking
 
 ```bash
 # Launch MLflow UI
@@ -319,7 +319,7 @@ Tracked automatically: loss curves, Pearson R, RMSE, learning rates, hyperparame
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
 - [ ] **3D structure path** -> AlphaFold2 predicted structures + SE(3)-equivariant GNN (EquiBind)
 - [ ] **ADMET multi-task** -> joint prediction of solubility, toxicity, membrane permeability
@@ -329,7 +329,7 @@ Tracked automatically: loss curves, Pearson R, RMSE, learning rates, hyperparame
 
 ---
 
-## 📚 Key References
+## Key References
 
 ```
 ESM-2:
@@ -355,7 +355,7 @@ CASF-2016:
 
 ---
 
-## 📄 License
+## License
 
 MIT License — see [LICENSE](LICENSE) for details.
 
