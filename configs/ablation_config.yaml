@@ -1,0 +1,17 @@
+# configs/ablation_config.yaml
+# ============================================================
+# Ablation Study Configurations
+# Run with: python train.py --config-name ablation_config
+# ============================================================
+# Inherits from base_config, overrides specific keys
+
+defaults:
+  - base_config
+
+# Ablation: Concatenation fusion instead of cross-attention
+model:
+  fusion:
+    type: "concat"   # vs. "cross_attention"
+
+training:
+  epochs: 50         # Shorter run for ablation

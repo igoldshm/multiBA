@@ -1,0 +1,155 @@
+# ============================================================
+# MultiBA — Base Configuration
+# All hyperparameters in one place (Hydra-managed)
+# ============================================================
+
+project:
+  name: "MultiBA"
+  version: "1.0.0"
+  description: "Multimodal Binding Affinity Predictor"
+  seed: 42
+
+# ── Data ──────────────────────────────────────────────────────
+data:
+  raw_dir: "data/raw/"
+  processed_dir: "data/processed/"
+  train_file: "data/processed/train.csv"
+  val_file: "data/processed/val.csv"
+  test_file: "data/processed/core_set.csv"  # PDBbind Core Set = industry benchmark
+  
+  max_protein_len: 1022     # ESM-2 context window (leave 2 for [CLS]/[EOS])
+  max_smiles_len: 512       # ChemBERTa-2 context window
+  
+  # PDBbind split: Refined Set (train+val) vs Core Set (test)
+  # Core Set is the CASF-2016 benchmark — never use for training!
+  split_strategy: "refined_core"  # or "random", "scaffold", "temporal"
+  val_fraction: 0.1
+  
+  num_workers: 4
+  pin_memory: true
+
+# ── Model ─────────────────────────────────────────────────────
+model:
+  # Protein Tower
+  protein_encoder:
+    backbone: "facebook/esm2_t33_650M_UR50D"  # 650M param ESM-2
+    # For quick dev/testing use: "facebook/esm2_t6_8M_UR50D"
+    freeze_backbone: true      # Freeze ESM-2; fine-tune via LoRA
+    lora:
+      enabled: true
+      r: 16                    # LoRA rank
+      alpha: 32                # LoRA alpha
+      dropout: 0.1
+      target_modules: ["query", "key", "value"]
+    output_dim: 1280           # ESM-2 650M hidden size
+    projection_dim: 512        # Project to shared dim
+    pooling: "mean"            # "mean", "cls", "max", or "attention"
+
+  # Ligand Tower
+  ligand_encoder:
+    mode: "chembert"           # "chembert", "gat", or "ensemble"
+    
+    # ChemBERTa-2 path
+    chembert:
+      backbone: "seyonec/ChemBERTa-zinc-base-v1"
+      freeze_backbone: false
+      output_dim: 768
+      projection_dim: 512
+    
+    # Graph Attention Network path
+    gat:
+      num_node_features: 74    # RDKit atom features
+      num_edge_features: 12    # Bond features
+      hidden_channels: 256
+      num_heads: 8
+      num_layers: 6
+      dropout: 0.1
+      projection_dim: 512
+      readout: "global_mean_add"  # Global mean + global add pooling
+
+  # Cross-Attention Fusion
+  fusion:
+    type: "cross_attention"    # "cross_attention", "bilinear", "concat"
+    embed_dim: 512
+    num_heads: 8
+    dropout: 0.1
+    num_layers: 2              # Stack 2 cross-attention layers
+    use_rope: false            # Rotary positional embeddings
+
+  # MLP Regression Head
+  head:
+    hidden_dims: [512, 256, 128]
+    activation: "gelu"
+    dropout_rates: [0.3, 0.2, 0.1]
+    use_batchnorm: false
+    use_layernorm: true
+
+# ── Training ──────────────────────────────────────────────────
+training:
+  epochs: 100
+  batch_size: 32
+  gradient_accumulation_steps: 2   # Effective batch = 64
+  
+  optimizer:
+    name: "adamw"
+    lr: 3.0e-4
+    weight_decay: 0.01
+    betas: [0.9, 0.999]
+    eps: 1.0e-8
+  
+  # Differential learning rates (protein backbone gets lower LR)
+  lr_groups:
+    protein_backbone: 1.0e-5
+    ligand_backbone: 3.0e-5
+    fusion_head: 3.0e-4
+
+  scheduler:
+    name: "cosine_warmup"
+    warmup_steps: 500
+    min_lr: 1.0e-6
+  
+  # Mixed precision
+  precision: "bf16-mixed"          # bfloat16 (stable on A100/H100)
+  gradient_clip_val: 1.0
+  
+  # Early stopping
+  early_stopping:
+    monitor: "val/pearson_r"
+    mode: "max"
+    patience: 15
+    min_delta: 0.001
+
+  # Loss function
+  loss:
+    primary: "mse"
+    ranking_loss_weight: 0.1      # Auxiliary pairwise ranking loss
+    uncertainty_weight: 0.0       # Set > 0 to train heteroscedastic uncertainty
+
+# ── Evaluation ─────────────────────────────────────────────────
+evaluation:
+  metrics: ["pearson_r", "spearman_r", "rmse", "mae", "ci"]
+  bootstrap_samples: 1000         # For confidence intervals
+  
+  mc_dropout:
+    enabled: true
+    num_samples: 30               # MC Dropout forward passes for uncertainty
+
+# ── Logging ────────────────────────────────────────────────────
+logging:
+  mlflow:
+    enabled: true
+    tracking_uri: "runs/mlflow"
+    experiment_name: "multiba"
+  wandb:
+    enabled: false
+    project: "multiba"
+    entity: null                  # Set your W&B username
+  log_every_n_steps: 50
+  save_top_k: 3
+
+# ── Paths ──────────────────────────────────────────────────────
+paths:
+  checkpoints: "checkpoints/"
+  results: "results/"
+  logs: "logs/"
+  cache: ".cache/"               # ESM-2 embedding cache
