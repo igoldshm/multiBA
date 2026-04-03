@@ -8,7 +8,7 @@
 <br/><br/>
 
 
-# MultiBA — Multimodal Binding Affinity Predictor
+# MultiBA - Multimodal Binding Affinity Predictor
 
 **A two-tower deep learning system that predicts protein-ligand binding affinity (pKd / pKi) from raw sequence and SMILES strings, combining Protein Language Models, Graph Neural Networks, and Cross-Attention Fusion.**
 
